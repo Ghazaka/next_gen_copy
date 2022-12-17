@@ -5,7 +5,6 @@ import 'package:provider/provider.dart';
 
 import '../errors/http_exception.dart';
 import '../providers/auth.dart';
-import '../providers/user.dart';
 import './password_reset_screen.dart';
 import './sign_up_option_screen.dart';
 import '../widgets/common_text_field.dart';
@@ -62,7 +61,10 @@ class _AuthScreenState extends State<AuthScreen> {
       _isLoading = true;
     });
     try {
-      await Provider.of<Auth>(context, listen: false).login(
+      await Provider.of<Auth>(
+        context,
+        listen: false,
+      ).login(
         _userData['email'],
         _userData['password'],
       );
@@ -202,8 +204,7 @@ class _AuthScreenState extends State<AuthScreen> {
                                   backgroundColor: MaterialStateProperty.all(
                                     Colors.red[700],
                                   ),
-                                  shape: MaterialStateProperty.all<
-                                      RoundedRectangleBorder>(
+                                  shape: MaterialStateProperty.all<RoundedRectangleBorder>(
                                     RoundedRectangleBorder(
                                       borderRadius: BorderRadius.circular(25),
                                     ),

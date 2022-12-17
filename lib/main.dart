@@ -1,11 +1,11 @@
 import 'package:flutter/material.dart';
-import 'package:next_gen_copy/screens/sign_up_screen.dart';
 import 'package:provider/provider.dart';
 
 import './helpers/custom_route.dart';
 import './providers/auth.dart';
 import './providers/user.dart';
 import './screens/notification_screen.dart';
+import './screens/sign_up_screen.dart';
 import './screens/home_screen.dart';
 import './screens/auth_screen.dart';
 import './screens/password_reset_screen.dart';
@@ -32,8 +32,8 @@ class MyApp extends StatelessWidget {
             }
             return userData!
               ..getAuthData(
-                authData.userId!,
                 authData.token!,
+                authData.userId!,
               );
           },
         ),
@@ -53,7 +53,7 @@ class MyApp extends StatelessWidget {
           PasswordResetScreen.routeName: (_) => const PasswordResetScreen(),
           ProfileScreen.routeName: (_) => const ProfileScreen(),
           SignUpOptionScreen.routeName: (_) => const SignUpOptionScreen(),
-          SignUpScreen.routeName: (_) => const SignUpScreen()
+          SignUpScreen.routeName: (_) => const SignUpScreen(),
         },
       ),
     );

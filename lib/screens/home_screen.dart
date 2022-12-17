@@ -98,7 +98,7 @@ class _HomeScreenState extends State<HomeScreen> {
             style: TextStyle(
               color: Colors.red[700],
               fontWeight: FontWeight.w700,
-              fontSize: 23
+              fontSize: 23,
             ),
           ),
           actions: [
@@ -132,14 +132,18 @@ class HomeBody extends StatelessWidget {
 
   @override
   Widget build(BuildContext context) {
-    return Center(
-      child: ElevatedButton(
-        onPressed: () {
-          Provider.of<Auth>(context, listen: false).logout();
-          Navigator.of(context).pushReplacementNamed('/');
-        },
-        child: const Text('Logout'),
-      ),
+    return Column(
+      mainAxisAlignment: MainAxisAlignment.center,
+      children: [
+        ElevatedButton(
+          onPressed: () {
+            Provider.of<Auth>(context, listen: false).logout().then((_) {
+              Navigator.of(context).pushReplacementNamed('/');
+            });
+          },
+          child: const Text('Logout'),
+        ),
+      ],
     );
   }
 }

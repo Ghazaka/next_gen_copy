@@ -4,15 +4,14 @@ import 'dart:convert';
 
 import 'package:flutter/material.dart';
 import 'package:http/http.dart' as http;
-import 'package:shared_preferences/shared_preferences.dart';
 
 class User with ChangeNotifier {
   String? userId;
   String? userToken;
 
-  void getAuthData(String id, String token) {
-    userId = id;
+  void getAuthData(String token, String id) {
     userToken = token;
+    userId = id;
     notifyListeners();
   }
 

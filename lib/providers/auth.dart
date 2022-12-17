@@ -9,6 +9,8 @@ import 'package:shared_preferences/shared_preferences.dart';
 
 import '../errors/http_exception.dart';
 
+const apiKey = 'AIzaSyCsejXKsUClEQ7eIACXQOyVe42ZsJN5BEA';
+
 class Auth with ChangeNotifier {
   String? _token;
   String? _refreshToken;
@@ -41,7 +43,7 @@ class Auth with ChangeNotifier {
     try {
       final response = await http.post(
         Uri.parse(
-          'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=AIzaSyCsejXKsUClEQ7eIACXQOyVe42ZsJN5BEA',
+          'https://identitytoolkit.googleapis.com/v1/accounts:$urlSegment?key=$apiKey',
         ),
         body: json.encode({
           'email': email,
@@ -63,7 +65,7 @@ class Auth with ChangeNotifier {
         ),
       );
       notifyListeners();
-      _autoLogout();
+      _exchangeToken();
       final userData = json.encode({
         'token': _token,
         'userId': _userId,
@@ -89,18 +91,20 @@ class Auth with ChangeNotifier {
     if (!prefs.containsKey('userData')) {
       return;
     }
-    final extractedUserData =
-        json.decode(prefs.getString('userData')!) as Map<String, dynamic>;
-    final expiryDate =
-        DateTime.parse(extractedUserData['expiryDate'] as String);
+    final extractedUserData = json.decode(
+      prefs.getString('userData')!,
+    ) as Map<String, dynamic>;
+    final expiryDate = DateTime.parse(
+      extractedUserData['expiryDate'] as String,
+    );
     if (expiryDate.isBefore(DateTime.now())) {
       return;
     }
     _token = extractedUserData['token'];
     _userId = extractedUserData['userId'];
     _expiryDate = expiryDate;
-    _autoLogout();
     notifyListeners();
+    _exchangeToken();
   }
 
   Future<void> signup(String email, String password) async {
@@ -114,7 +118,8 @@ class Auth with ChangeNotifier {
   Future<void> resetPassword(String email) async {
     http.post(
       Uri.parse(
-          'https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=AIzaSyCsejXKsUClEQ7eIACXQOyVe42ZsJN5BEA'),
+        'https://identitytoolkit.googleapis.com/v1/accounts:sendOobCode?key=$apiKey',
+      ),
       body: json.encode({
         'requestType': 'PASSWORD_RESET',
         'email': email,
@@ -122,7 +127,7 @@ class Auth with ChangeNotifier {
     );
   }
 
-  void _autoLogout() {
+  void _exchangeToken() {
     if (_authTimer != null) {
       _authTimer!.cancel();
       _authTimer = null;
@@ -134,7 +139,7 @@ class Auth with ChangeNotifier {
         try {
           final response = await http.post(
             Uri.parse(
-              'https://securetoken.googleapis.com/v1/token?key=AIzaSyCsejXKsUClEQ7eIACXQOyVe42ZsJN5BEA',
+              'https://securetoken.googleapis.com/v1/token?key=$apiKey',
             ),
             body: json.encode({
               'grant_type': 'refresh_token',
@@ -152,7 +157,6 @@ class Auth with ChangeNotifier {
               seconds: int.parse(responseData['expires_in']),
             ),
           );
-          print(_userId);
           _refreshToken = responseData['refresh_token'];
           final userData = json.encode({
             'token': _token,

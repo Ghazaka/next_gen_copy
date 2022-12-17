@@ -134,9 +134,7 @@ class _PasswordResetScreenState extends State<PasswordResetScreen> {
                           }
                           _form.currentState!.save();
                           Provider.of<Auth>(context, listen: false)
-                              .resetPassword(_userEmail)
-                              .catchError((e) {
-                          });
+                              .resetPassword(_userEmail);
                         },
                         child: const Text(
                           'Send',

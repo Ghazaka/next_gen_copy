@@ -7,7 +7,6 @@ import 'package:provider/provider.dart';
 import 'package:intl/intl.dart';
 import 'package:http/http.dart' as http;
 
-import '../providers/user.dart';
 import '../errors/http_exception.dart';
 import '../providers/auth.dart';
 import '../widgets/common_text_field.dart';
